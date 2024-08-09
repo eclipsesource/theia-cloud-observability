@@ -6,6 +6,7 @@ This repository contains an experimental, initial setup to monitor a Theia Cloud
 
 The important part of this is the configuration in folders [`kube-prometheus-stack`](./kube-prometheus-stack/) and [`grafana-dashboards`](./grafana-dashboards).
 
+
 ## Subfolders
 
 - `grafana-dashboards`: JSON models of custom Grafana dashboards
