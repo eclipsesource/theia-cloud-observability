@@ -80,6 +80,9 @@ helm upgrade kube-prometheus-stack prometheus-community/kube-prometheus-stack \
 
 ## Install/Upgrade additional manifests
 
+**Note:** The custom Grafana dashboard [dashboard-theiacloud.yaml](./manifests/dashboard-theiacloud.yaml) assumes that Theia Cloud was installed in namespace `theiacloud`.
+If this is not the case for you installation, you can search the file for `namespace=\"theiacloud\"` and replace `theiacloud` with your namespace in there.
+
 ```sh
 kubectl apply -f manifests
 ```
