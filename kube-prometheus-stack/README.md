@@ -35,12 +35,6 @@ further properties of the cluster (i.e. domain, TLS certificate handling).
 Also note that the Prometheus API and Web UI do not require any credentials and, thus,
 can be queried by anyone when this is exposed publicly.
 
-### Theia Cloud Installation
-
-The [additional manifests](./manifests/) assume that Theia Cloud is installed in namespace `theiacloud`.
-If this is not the case, manifest [pod-selector-theia-cloud-sessions.yaml](./manifests/pod-selector-theia-cloud-sessions.yaml) needs adaption.
-In the `namespaceSelector`, replace `theiacloud` with your installation namespace.
-
 ### Kube Prometheus Stack Prerequisites
 
 Using GKE, no additional configuration for the cluster was needed for the stack to work out of the box.
@@ -79,10 +73,23 @@ helm upgrade kube-prometheus-stack prometheus-community/kube-prometheus-stack \
 ```
 
 ## Install/Upgrade additional manifests
+The [additional manifests](./manifests/) contain a Grafana dashboard custom-made for showing Theia Cloud parameters. The pod selector required for the dashboard to work is also included.
 
-**Note:** The custom Grafana dashboard [dashboard-theiacloud.yaml](./manifests/dashboard-theiacloud.yaml) assumes that Theia Cloud was installed in namespace `theiacloud`.
-If this is not the case for you installation, you can search the file for `namespace=\"theiacloud\"` and replace `theiacloud` with your namespace in there.
+**Note:** The manifests assume default namespaces for both the theia cloud (`theiacloud`) and the prometheus (`kube-prometheus-stack`) installation. If those namespaces do not match your installation, you'll have to upgrade the manifests as follows.
 
+### Upgrade the Grafana dashboard
+The custom Grafana dashboard [dashboard-theiacloud.yaml](./manifests/dashboard-theiacloud.yaml) is minified and contains the hard-coded namespaces in its `data` property.
+
+1. Replace all occurences of `namespace=\"theiacloud\"` with `namespace=\"<your-theiacloud-namespace>\"`.
+2. Replace all occurences of `kube-prometheus-stack` with `<your-prometheus-namespace>` including the namespace definition in the metadata. 
+
+### Upgrade the pod selector
+The pod selector [pod-selector-theia-cloud-sessions.yaml](./manifests/pod-selector-theia-cloud-sessions.yaml) takes care of monitoring and creating reports for all running Theia sessions.
+
+1. Replace `kube-prometheus-stack` in the metadata with `<your-prometheus-namespace>`.
+2. Replace `theiacloud` under `spec`>`namespaceSelector`>`matchNames` with `<your-theiacloud-namespace>`.
+
+### Install the manifests
 ```sh
 kubectl apply -f manifests
 ```
